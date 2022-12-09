@@ -6,7 +6,7 @@
   - [Controllers](#controllers)
   - [Services](#services)
   - [Admin](#admin)
-    - [Surcharge nécessaire](#surcharge-nécessaire)
+    - [Surcharge nécessaire Strapi](#surcharge-nécessaire-strapi)
 - [Configuration et utilisation](#configuration-et-utilisation)
   - [Interface d’administration](#interface-dadministration)
 
@@ -56,12 +56,73 @@ Le fichier `admin/src/index.js` contient les paramètres de la page d'administra
 Le fichier `admin/src/containers/HomePage/index.js` contient la page principale d'administration du plugin.  
 Le fichier `admin/src/components/CoogPlugin/index.js` contient le coeur de la page, il se présente comme un composant React classique.
 
-### Surcharge nécessaire
+### Surcharge nécessaire Strapi
 
 L'extension `users-permissions` a été surchargé afin de pouvoir créer les User lors de la connexion.
 
-Le fichier `controllers/Auth.js` a été surchargé pour permettre de créer un User lors d'une connexion via login/mdp. L'inviteToken a également été rajouté dans les paramètres personnalisables de la configuration Grant pour Auth0.  
+Le fichier `controllers/Auth.js` a été surchargé pour permettre de créer un User lors d'une connexion via login/mdp. L'inviteToken a également été rajouté dans les paramètres personnalisables de la configuration Grant pour Auth0.
+
+<details>
+  <summary>Détails de la surcharge</summary>
+
+  Dans la méthode `callback`, au niveau de la section `validPassword`, si le mot de passe est valide (lignes 228+), remplacer le code existant par :
+
+  ```js
+  const [createdUser, errorCreate] = await strapi
+    .plugins['coog-plugin']
+    .services
+    .user
+    .create({ ...user, inviteToken: params.inviteToken });
+
+  if (errorCreate) {
+    return ctx.badRequest(
+      null,
+      errorCreate === 'array' ? errorCreate[0] : errorCreate
+    );
+  }
+
+  ctx.send({
+    jwt: strapi.plugins['users-permissions'].services.jwt.issue({
+      id: user.id,
+    }),
+    refresh: generateRefreshToken(user),
+    user: sanitizeEntity(
+      createdUser.toJSON ? createdUser.toJSON() : createdUser,
+      {
+        model: strapi.query('user', 'users-permissions').model,
+      }
+    ),
+  });
+  ```
+
+  A la fin de la méthode `connect` (lignes 343 : `async connect(ctx, next) {`), rajouter le code suivant juste avant le `return` (ligne 373) :
+
+  ```js
+  grantConfig[provider].custom_params = {
+    inviteToken: ctx?.query?.inviteToken,
+  };
+  ```
+</details>
+
 Le fichier `services/Prodivers.js` a été surchargé pour permettre de créer un User lors d'une connexion via un provider (Auth0 par exemple).
+
+<details>
+  <summary>Détails de la surcharge</summary>
+
+  Dans la méthode `connect`, dans le callback envoyé en paramètre à l'appel de `getProfile`, ajouter le code suivant juste avant le `return` (ligne 92):
+
+  ```js
+  const [createdUser, errorCreate] = await strapi
+    .plugins['coog-plugin']
+    .services
+    .user
+    .create(params);
+
+  if (errorCreate) {
+    return reject([null, errorCreate]);
+  }
+  ```
+</details>
 
 # Configuration et utilisation
 
