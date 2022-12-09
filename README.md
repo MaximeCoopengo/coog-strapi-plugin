@@ -71,3 +71,5 @@ L’interface d'administration du plugin se trouve dans l'onglet Settings puis C
 
 Elle se compose en deux parties, la première partie permet de configurer le plugin avec l'URL de Gateway et Token d'accès.
 La deuxième partie permet de tester la configuration afin de valider le fonctionnement.
+
+![image](https://user-images.githubusercontent.com/60874847/206681662-fec1ed25-2e12-46bd-a846-4a489976c417.png)
