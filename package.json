@@ -1,0 +1,28 @@
+{
+  "name": "strapi-plugin-coog-connector",
+  "version": "0.0.1",
+  "description": "Coog Connector plugin for Strapi.",
+  "strapi": {
+    "name": "Coog Connector",
+    "icon": "plug",
+    "description": "Coog Connector plugin for Strapi."
+  },
+  "dependencies": {},
+  "author": {
+    "name": "Dominique BERTRAND",
+    "email": "dominique.bertrand@gmail.com",
+    "url": "https://github.com/DominiqueBertrand"
+  },
+  "maintainers": [
+    {
+      "name": "Dominique BERTRAND",
+      "email": "dominique.bertrand@gmail.com",
+      "url": "https://github.com/DominiqueBertrand"
+    }
+  ],
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

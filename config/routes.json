@@ -1,0 +1,178 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/settings",
+      "handler": "CoogConnector.get",
+      "config": {
+        "policies": [
+          "admin::isAuthenticatedAdmin",
+          ["admin::hasPermissions", ["plugins::coog-plugin.settings.read"]]
+        ],
+        "description": "Get the CoogConnector settings",
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "CoogConnector"
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/settings",
+      "handler": "CoogConnector.update",
+      "config": {
+        "policies": [
+          "admin::isAuthenticatedAdmin",
+          ["admin::hasPermissions", ["plugins::coog-plugin.settings.update"]]
+        ],
+        "description": "Update the CoogConnector settings",
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "CoogConnector"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/customer",
+      "handler": "Customer.find",
+      "config": {
+        "policies": ["global::is-authenticated"],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Customer"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/customer/:code",
+      "handler": "Customer.findByCode",
+      "config": {
+        "policies": [
+          "admin::isAuthenticatedAdmin",
+          [
+            "admin::hasPermissions",
+            [
+              "plugins::coog-plugin.settings.read",
+              "plugins::coog-plugin.settings.update"
+            ]
+          ]
+        ],
+        "description": "Get customer info by code",
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Customer"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/documents/request",
+      "handler": "Customer.documentsRequest",
+      "config": {
+        "policies": ["global::is-authenticated"],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Customer"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/form/:token",
+      "handler": "Form.requestToken",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Form"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/form/:token",
+      "handler": "Form.answersToken",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Form"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/form/documents/:token",
+      "handler": "Form.uploadToken",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Form"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user",
+      "handler": "User.create",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user/redirect",
+      "handler": "User.redirect",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user/token/validate/:token",
+      "handler": "User.validateToken",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/payment/:method",
+      "handler": "Payment.create",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Payment"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/members/:id/:part",
+      "handler": "Member.updateById",
+      "config": {
+        "policies": [],
+        "tag": {
+          "plugin": "coog-plugin",
+          "name": "Member"
+        }
+      }
+    }
+  ]
+}
